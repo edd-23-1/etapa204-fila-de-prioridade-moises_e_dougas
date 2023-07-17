@@ -79,6 +79,7 @@ class FilaPrioridade:
             valor_str = str(no_atual.dado)  # Converter para string
             items.insert(0,(valor_str, no_atual.prioridade))
             no_atual = no_atual.proximo
+           
         return items      
         # implementação do método
     
@@ -86,4 +87,4 @@ class FilaPrioridade:
     # se a fila de prioridade estiver vazia, retorna ZERO
     def size(self) -> int:
         return self.__qtdItens
-        # implementação do método
+        
