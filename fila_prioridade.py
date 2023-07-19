@@ -35,22 +35,27 @@ class FilaPrioridade:
     # insere um item na fila de prioridade e retorna True, se o item for inserido
     # se a fila de prioridade estiver cheia, lança uma exceção: raise Exception("mensagem de erro")
     def add(self, valor, prioridade) -> bool:
-      if self.is_full():
-        raise Exception("A fila de prioridade está cheia.")
-      novo_no = No(valor, prioridade)
-      if self.is_empty() or prioridade <= self.__inicio.prioridade:
+        if self.is_full():
+            raise Exception("A fila de prioridade está cheia.")
+        
+        novo_no = No(valor, prioridade)
+        if self.is_empty() or prioridade <= self.__inicio.prioridade:
             novo_no.proximo = self.__inicio
             self.__inicio = novo_no
-      else:
+        else:
+            no_anterior = None
             no_atual = self.__inicio
-            while no_atual.proximo is not None and no_atual.proximo.prioridade <= prioridade:
+            while no_atual is not None and no_atual.prioridade < prioridade:
+                no_anterior = no_atual
                 no_atual = no_atual.proximo
-            novo_no.proximo = no_atual.proximo
-            no_atual.proximo = novo_no
-      self.__qtdItens += 1
         
-      return True
-            
+            no_anterior.proximo = novo_no
+            novo_no.proximo = no_atual
+                
+        self.__qtdItens += 1
+        return True 
+        
+               
         # implementação do método
 
     # remove o primeiro item da fila de prioridade, caso não esteja vazia, e retorna o Nó
@@ -58,10 +63,15 @@ class FilaPrioridade:
     def remove(self) -> No:
         if self.is_empty():
             raise Exception("A fila de prioridades está vazia.")
+        
         no_removido = self.__inicio
         self.__inicio = self.__inicio.proximo
         self.__qtdItens -= 1
+        if self.is_empty():
+            self.__inicio = None
+        
         return no_removido
+  
         # implementação do método
         
     # retorna uma lista de tuplas com os itens (valor e prioridade) da fila de prioridade 
@@ -73,6 +83,7 @@ class FilaPrioridade:
           if self.is_empty():
             print("A fila de prioridade está vazia.")
             return []
+        
         items = []
         no_atual = self.__inicio
         while no_atual is not None:
