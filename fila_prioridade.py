@@ -18,84 +18,83 @@ class FilaPrioridade:
 
     # Retorna True se a fila de prioridade está vazia, False caso contrário
     def is_empty(self) -> bool:
-        return self.__inicio is None
-        # implementação do método
-        
+        return self.__qtdItens == 0
+
+   
     # retorna True se a fila de prioridade está cheia, False caso contrário
     def is_full(self) -> bool:
         return self.__qtdItens == self.__capacidade
-        # implementação do método
-        
+
+
     # Retorna uma referência para o primeiro item da fila de prioridade
     # Caso a lista esteja vazia, retorna None
     def first(self) -> No:
-        return self.__inicio
-        # implementação do método
-        
+        if self.is_empty():
+            return None
+        else:
+            return self.__inicio
+
+
     # insere um item na fila de prioridade e retorna True, se o item for inserido
     # se a fila de prioridade estiver cheia, lança uma exceção: raise Exception("mensagem de erro")
     def add(self, valor, prioridade) -> bool:
         if self.is_full():
-            raise Exception("A fila de prioridade está cheia.")
-        
-        novo_no = No(valor, prioridade)
-        if self.is_empty() or prioridade <= self.__inicio.prioridade:
-            novo_no.proximo = self.__inicio
-            self.__inicio = novo_no
-        else:
-            no_anterior = None
-            no_atual = self.__inicio
-            while no_atual is not None and no_atual.prioridade < prioridade:
-                no_anterior = no_atual
-                no_atual = no_atual.proximo
-        
-            no_anterior.proximo = novo_no
-            novo_no.proximo = no_atual
-                
-        self.__qtdItens += 1
-        return True 
-        
-               
-        # implementação do método
+            raise Exception(" A fila está cheia!")
 
+        no = No(valor, prioridade)
+
+        if self.is_empty() or prioridade > self.__inicio.prioridade:
+            no.prox = self.__inicio
+            self.__inicio = no
+        else:
+            pointer = self.__inicio
+            while pointer.prox and prioridade <= pointer.prox.prioridade:
+                pointer = pointer.prox
+
+            no.prox = pointer.prox
+            pointer.prox = no
+
+        self.__qtdItens += 1
+        return True
+   
     # remove o primeiro item da fila de prioridade, caso não esteja vazia, e retorna o Nó
     # se a fila de prioridade estiver vazia, lança uma exceção: raise Exception("mensagem de erro")
     def remove(self) -> No:
         if self.is_empty():
-            raise Exception("A fila de prioridades está vazia.")
-        
-        no_removido = self.__inicio
-        self.__inicio = self.__inicio.proximo
-        self.__qtdItens -= 1
-        if self.is_empty():
-            self.__inicio = None
-        
-        return no_removido
-  
-        # implementação do método
-        
-    # retorna uma lista de tuplas com os itens (valor e prioridade) da fila de prioridade 
+            raise Exception("A Fila esta vazia")
+
+        else:
+            item = self.__inicio
+            self.__inicio = self.__inicio.prox
+            self.__qtdItens -= 1
+            return item
+
+       
+
+
+    # retorna uma lista de tuplas com os itens (valor e prioridade) da fila de prioridade
     # imprime os itens da fila de prioridade do primeiro para o último
     # caso a fila de prioridade esteja vazia, imprime uma mensagem informando
     # que a fila de prioridade está vazia e retorna uma lista vazia
     def display(self) -> list[tuple()]:
+        # implementação do método
         if self.is_empty():
-          if self.is_empty():
             print("A fila de prioridade está vazia.")
             return []
-        
-        items = []
-        no_atual = self.__inicio
-        while no_atual is not None:
-            valor_str = str(no_atual.dado)  # Converter para string
-            items.insert(0,(valor_str, no_atual.prioridade))
-            no_atual = no_atual.proximo
-           
-        return items      
-        # implementação do método
-    
+
+        itens = []
+        atual = self.__inicio
+        while atual is not None:
+            itens.append((atual.dado, atual.prioridade))
+            atual = atual.prox
+
+        for item in itens:
+            print(f"Item: {item[0]}, Prioridade: {item[1]}")
+
+        return itens
+   
+
     # retorna a quantidade de elementos na fila de prioridade
     # se a fila de prioridade estiver vazia, retorna ZERO
     def size(self) -> int:
         return self.__qtdItens
-        
