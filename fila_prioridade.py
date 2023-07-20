@@ -18,48 +18,83 @@ class FilaPrioridade:
 
     # Retorna True se a fila de prioridade está vazia, False caso contrário
     def is_empty(self) -> bool:
-        # implementação do método
-        pass
+        return self.__qtdItens == 0
 
-    
+   
     # retorna True se a fila de prioridade está cheia, False caso contrário
     def is_full(self) -> bool:
-        # implementação do método
-        pass
+        return self.__qtdItens == self.__capacidade
 
 
     # Retorna uma referência para o primeiro item da fila de prioridade
     # Caso a lista esteja vazia, retorna None
     def first(self) -> No:
-        # implementação do método
-        pass
+        if self.is_empty():
+            return None
+        else:
+            return self.__inicio
 
 
     # insere um item na fila de prioridade e retorna True, se o item for inserido
     # se a fila de prioridade estiver cheia, lança uma exceção: raise Exception("mensagem de erro")
     def add(self, valor, prioridade) -> bool:
-        # implementação do método
-        pass
+        if self.is_full():
+            raise Exception(" A fila está cheia!")
 
-    
+        no = No(valor, prioridade)
+
+        if self.is_empty() or prioridade > self.__inicio.prioridade:
+            no.prox = self.__inicio
+            self.__inicio = no
+        else:
+            pointer = self.__inicio
+            while pointer.prox and prioridade <= pointer.prox.prioridade:
+                pointer = pointer.prox
+
+            no.prox = pointer.prox
+            pointer.prox = no
+
+        self.__qtdItens += 1
+        return True
+   
     # remove o primeiro item da fila de prioridade, caso não esteja vazia, e retorna o Nó
     # se a fila de prioridade estiver vazia, lança uma exceção: raise Exception("mensagem de erro")
     def remove(self) -> No:
-        # implementação do método
-        pass
+        if self.is_empty():
+            raise Exception("A Fila esta vazia")
+
+        else:
+            item = self.__inicio
+            self.__inicio = self.__inicio.prox
+            self.__qtdItens -= 1
+            return item
+
+       
 
 
-    # retorna uma lista de tuplas com os itens (valor e prioridade) da fila de prioridade 
+    # retorna uma lista de tuplas com os itens (valor e prioridade) da fila de prioridade
     # imprime os itens da fila de prioridade do primeiro para o último
     # caso a fila de prioridade esteja vazia, imprime uma mensagem informando
     # que a fila de prioridade está vazia e retorna uma lista vazia
     def display(self) -> list[tuple()]:
         # implementação do método
-        pass
-    
+        if self.is_empty():
+            print("A fila de prioridade está vazia.")
+            return []
+
+        itens = []
+        atual = self.__inicio
+        while atual is not None:
+            itens.append((atual.dado, atual.prioridade))
+            atual = atual.prox
+
+        for item in itens:
+            print(f"Item: {item[0]}, Prioridade: {item[1]}")
+
+        return itens
+   
 
     # retorna a quantidade de elementos na fila de prioridade
     # se a fila de prioridade estiver vazia, retorna ZERO
     def size(self) -> int:
-        # implementação do método
-        pass
+        return self.__qtdItens
